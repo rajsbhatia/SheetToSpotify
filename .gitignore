@@ -1,0 +1,7 @@
+# Specific files
+credentials.json
+token.pickle
+spotifyID.json
+.cache-*
+quickstart.py
+sample.json
