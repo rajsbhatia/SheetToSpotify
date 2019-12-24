@@ -13,7 +13,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import json
 import requests
 
-
+# Class for storing credentials info such as client id, etc
 class Credentials:
     def __init__(self, client_id, client_secret, redirect):
         self.client_id = client_id
@@ -29,8 +29,6 @@ class Track:
 
 
 # gets spotify credentials/client info for application from file
-
-
 def createSpotifyCredentialsObj():
     with open('spotifyID.json') as json_file:
         data = json.load(json_file)
@@ -69,18 +67,28 @@ def getTrackID(trackDict):
         track_id = d.get('items')[0].get('id')
     return track_id
 
-def notInPlist(tids, username, ):
-    removeList = []
-
-    return removeList
-
-# TODO: remove tracks from songIDs if already in playlist
-def removeDups(songIDs):
-    return
+"""
+Checks if the playlist has all items in @currentTIDs and adds them
+    does replacement of all tracks when playlist already has tracks
+    works for UP TO 100 tracks in current playlist
+@sp: spotify object after authorization
+@currentTIDs: track ids picked up from sheets
+@username: name of account
+"""
+def verifyAndAdd(sp, currentTIDs, username):
+    currentPlist = sp.user_playlist_tracks(username, playlist_id=PLAYLIST_ID)
+    # if not same amount of tracks OR playlist has tracks in it, replace all tracks in l with currentTIDs
+    if len(currentPlist) != len(currentTIDs) or len(currentPlist) > 0:
+        print("...replacing and adding new songs to playlist...")
+        sp.user_playlist_replace_tracks(username, playlist_id=PLAYLIST_ID, tracks=currentTIDs)
+    elif len(currentPlist) == 0: # add all songs initially to playlist if no tracks in it
+        print("...initial populating of playlist...")
+        sp.user_playlist_add_tracks(username, playlist_id=PLAYLIST_ID, tracks=currentTIDs)
+    print("done adding to playlist")
 
 
 def toSpotify(tracks):
-    print('going to Spotify...')
+    print('...going to Spotify...')
     track_ids = []
     for track in tracks:
         searchResult = spotify.search(
@@ -91,18 +99,16 @@ def toSpotify(tracks):
     # got tids -> to playlist, prompt user for token
     username = 'KDVS Core'
     scope = 'playlist-modify-public'
-    print("...getting tokens...")
+    print("...getting auth tokens...")
     token = util.prompt_for_user_token(
         username, scope, SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI)
     if token:
         # if token exists, authorize and add tracks to playlist
         sp = spotipy.Spotify(auth=token)
         sp.trace = False
-        # TODO: remove songs from playlist if not in list of tids
-        # TODO: remove duplicates from track_ids before adding to playlist
-        results = sp.user_playlist_add_tracks(
-            username, playlist_id=PLAYLIST_ID, tracks=track_ids)
-        print(results)
+        print("authorized")
+        # add tracks to playlist
+        verifyAndAdd(sp, track_ids, username)
     else:
         print("cant get token for", username)
 
@@ -142,6 +148,7 @@ def getSheetInfo():
     if not values:
         print('No data found.')
     else:
+        print("...getting data from sheets...")
         print('Artist, Album, Song:')
         for row in values:
             # Print columns C, D, E, which correspond to indices 0, 1, 2
