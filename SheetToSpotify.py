@@ -20,7 +20,7 @@ class Credentials:
         self.client_secret = client_secret
         self.redirect = redirect
 
-
+# Class for storing info about song from sheet api
 class Track:
     def __init__(self, artist, album, song):
         self.artist = artist
