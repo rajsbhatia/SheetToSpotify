@@ -15,10 +15,11 @@ import requests
 
 # Class for storing credentials info such as client id, etc
 class Credentials:
-    def __init__(self, client_id, client_secret, redirect):
+    def __init__(self, client_id, client_secret, redirect, pid):
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect = redirect
+        self.pid = pid
 
 # Class for storing info about song from sheet api
 class Track:
@@ -34,7 +35,7 @@ def createSpotifyCredentialsObj():
         data = json.load(json_file)
         for p in data['spotify']:
             creds = Credentials(
-                p['client_id'], p['client_secret'], p['redirect_uri'])
+                p['client_id'], p['client_secret'], p['redirect_uri'], p['pid'])
     return creds
 
 
@@ -43,7 +44,7 @@ credentials = createSpotifyCredentialsObj()
 SPOTIPY_CLIENT_ID = credentials.client_id
 SPOTIPY_CLIENT_SECRET = credentials.client_secret
 SPOTIPY_REDIRECT_URI = credentials.redirect
-PLAYLIST_ID = '2K8kj2paBKlXqCueepH3Py'
+PLAYLIST_ID = credentials.pid
 
 client_credentials_manager = SpotifyClientCredentials(client_id=credentials.client_id,
                                                       client_secret=credentials.client_secret)
