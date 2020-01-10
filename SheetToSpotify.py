@@ -12,8 +12,10 @@ from spotipy.oauth2 import SpotifyClientCredentials
 # JSON
 import json
 import requests
+# regex
+import re
 
-# Class for storing credentials info such as client id, etc
+# Class for storing credentials info such as client id, etc from Spotify
 class Credentials:
     def __init__(self, client_id, client_secret, redirect, pid):
         self.client_id = client_id
@@ -55,8 +57,6 @@ spotify = spotipy.Spotify(
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
-# The ID of spreadsheet.
-DEC_SHEET_ID = '1qNsUKvOKQtWUTX7tnoqIm9JGDHs6gpcMAeHcxgEZLGY'  # DECEMBER playlist
 # range of cells for song info from the form
 INFO_RANGE = 'Form Responses 1!C2:E'
 
@@ -114,7 +114,7 @@ def toSpotify(tracks):
         print("cant get token for", username)
 
 
-def getSheetInfo():
+def getSheetInfo(sheetID):
     """Shows basic usage of the Sheets API.
     Prints values from a sample spreadsheet.
     """
@@ -141,7 +141,7 @@ def getSheetInfo():
 
     # Call the Sheets API & get info
     sheet = service.spreadsheets()
-    result = sheet.values().get(spreadsheetId=DEC_SHEET_ID,
+    result = sheet.values().get(spreadsheetId=sheetID,
                                 range=INFO_RANGE).execute()
     values = result.get('values', [])
     tracks = []
@@ -157,9 +157,24 @@ def getSheetInfo():
             tracks.append(Track(row[0], row[1], row[2]))
     return tracks
 
+# https://docs.google.com/spreadsheets/d/spreadsheetId/edit#gid=0
+# https://docs.google.com/spreadsheets/d/1qNsUKvOKQtWUTX7tnoqIm9JGDHs6gpcMAeHcxgEZLGY/edit#gid=0
+# uses regex to get spreadsheetId portion from links like above
+def getSheetID():
+    sheetURL = raw_input("Enter the url of the google sheet: ")
+    print(sheetURL)
+    i = re.search(r'/d/([a-zA-Z0-9-_]+)', sheetURL).group()
+    # gets '/d/spreadsheetId' as two seperate strings in an array
+    x = re.findall(r'\w+', i)
+    sheetID = x[1]
+    return sheetID
+
+
 
 def main():
-    tracks = getSheetInfo()
+    sheetID = getSheetID()
+    #TODO: get the user and pid from the user
+    tracks = getSheetInfo(sheetID)
     toSpotify(tracks)
 
 
