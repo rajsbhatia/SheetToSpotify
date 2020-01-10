@@ -37,7 +37,7 @@ def createSpotifyCredentialsObj():
         data = json.load(json_file)
         for p in data['spotify']:
             creds = Credentials(
-                p['client_id'], p['client_secret'], p['redirect_uri'], p['pid'])
+                p['client_id'], p['client_secret'], p['redirect_uri'])
     return creds
 
 
@@ -46,7 +46,6 @@ credentials = createSpotifyCredentialsObj()
 SPOTIPY_CLIENT_ID = credentials.client_id
 SPOTIPY_CLIENT_SECRET = credentials.client_secret
 SPOTIPY_REDIRECT_URI = credentials.redirect
-PLAYLIST_ID = credentials.pid
 
 client_credentials_manager = SpotifyClientCredentials(client_id=credentials.client_id,
                                                       client_secret=credentials.client_secret)
@@ -77,14 +76,19 @@ Checks if the playlist has all items in @currentTIDs and adds them
 @username: name of account
 """
 def verifyAndAdd(sp, currentTIDs, username):
-    currentPlist = sp.user_playlist_tracks(username, playlist_id=PLAYLIST_ID)
+    # comes in form "spotify:playlist:pid"
+    uri = raw_input("enter URI of playlist to add to: ")
+    l = re.findall(r'\w+', uri)
+    # want the pid portion of the alphanumeric strings from regex search
+    pid = l[2]
+    currentPlist = sp.user_playlist_tracks(username, playlist_id=pid)
     # if not same amount of tracks OR playlist has tracks in it, replace all tracks in l with currentTIDs
     if len(currentPlist) != len(currentTIDs) or len(currentPlist) > 0:
         print("...replacing and adding new songs to playlist...")
-        sp.user_playlist_replace_tracks(username, playlist_id=PLAYLIST_ID, tracks=currentTIDs)
+        sp.user_playlist_replace_tracks(username, playlist_id=pid, tracks=currentTIDs)
     elif len(currentPlist) == 0: # add all songs initially to playlist if no tracks in it
         print("...initial populating of playlist...")
-        sp.user_playlist_add_tracks(username, playlist_id=PLAYLIST_ID, tracks=currentTIDs)
+        sp.user_playlist_add_tracks(username, playlist_id=pid, tracks=currentTIDs)
     print("done adding to playlist")
 
 
@@ -98,7 +102,7 @@ def toSpotify(tracks):
         result = getTrackID(searchResult)
         track_ids.append(result)
     # got tids -> to playlist, prompt user for token
-    username = 'KDVS Core'
+    username = raw_input('Input username of account of playlist to add to: ')
     scope = 'playlist-modify-public'
     print("...getting auth tokens...")
     token = util.prompt_for_user_token(
@@ -170,10 +174,8 @@ def getSheetID():
     return sheetID
 
 
-
 def main():
     sheetID = getSheetID()
-    #TODO: get the user and pid from the user
     tracks = getSheetInfo(sheetID)
     toSpotify(tracks)
 
