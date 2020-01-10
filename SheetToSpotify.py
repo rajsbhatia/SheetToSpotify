@@ -17,11 +17,10 @@ import re
 
 # Class for storing credentials info such as client id, etc from Spotify
 class Credentials:
-    def __init__(self, client_id, client_secret, redirect, pid):
+    def __init__(self, client_id, client_secret, redirect):
         self.client_id = client_id
         self.client_secret = client_secret
         self.redirect = redirect
-        self.pid = pid
 
 # Class for storing info about song from sheet api
 class Track:
@@ -162,11 +161,9 @@ def getSheetInfo(sheetID):
     return tracks
 
 # https://docs.google.com/spreadsheets/d/spreadsheetId/edit#gid=0
-# https://docs.google.com/spreadsheets/d/1qNsUKvOKQtWUTX7tnoqIm9JGDHs6gpcMAeHcxgEZLGY/edit#gid=0
 # uses regex to get spreadsheetId portion from links like above
 def getSheetID():
     sheetURL = raw_input("Enter the url of the google sheet: ")
-    print(sheetURL)
     i = re.search(r'/d/([a-zA-Z0-9-_]+)', sheetURL).group()
     # gets '/d/spreadsheetId' as two seperate strings in an array
     x = re.findall(r'\w+', i)
