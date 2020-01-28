@@ -60,11 +60,12 @@ INFO_RANGE = 'Form Responses 1!C2:E'
 
 
 def getTrackID(trackDict):
-    track_id = ''
+    track_uri = ''
     for d in trackDict.values():
         # TODO: add validation of type and number of elements
-        track_id = d.get('items')[0].get('id')
-    return track_id
+        # get URIs for each track
+        track_uri = d.get('items')[0].get('uri')
+    return track_uri
 
 """
 Checks if the playlist has all items in @currentTIDs and adds them
@@ -77,17 +78,14 @@ Checks if the playlist has all items in @currentTIDs and adds them
 def verifyAndAdd(sp, currentTIDs, username):
     # comes in form "spotify:playlist:pid"
     uri = raw_input("enter URI of playlist to add to: ")
-    l = re.findall(r'\w+', uri)
-    # want the pid portion of the alphanumeric strings from regex search
-    pid = l[2]
-    currentPlist = sp.user_playlist_tracks(username, playlist_id=pid)
+    currentPlist = sp.user_playlist_tracks(username, playlist_id=uri)
     # if not same amount of tracks OR playlist has tracks in it, replace all tracks in l with currentTIDs
     if len(currentPlist) != len(currentTIDs) or len(currentPlist) > 0:
         print("...replacing and adding new songs to playlist...")
-        sp.user_playlist_replace_tracks(username, playlist_id=pid, tracks=currentTIDs)
+        sp.user_playlist_replace_tracks(username, playlist_id=uri, tracks=currentTIDs)
     elif len(currentPlist) == 0: # add all songs initially to playlist if no tracks in it
         print("...initial populating of playlist...")
-        sp.user_playlist_add_tracks(username, playlist_id=pid, tracks=currentTIDs)
+        sp.user_playlist_add_tracks(username, playlist_id=uri, tracks=currentTIDs)
     print("done adding to playlist")
 
 
@@ -97,7 +95,7 @@ def toSpotify(tracks):
     for track in tracks:
         searchResult = spotify.search(
             q='artist:' + track.artist + ' track:' + track.song, limit=1, offset=0, type='track')
-        # convert search result to JSON string
+        # look through search result as a JSON string
         result = getTrackID(searchResult)
         track_ids.append(result)
     # got tids -> to playlist, prompt user for token
@@ -119,7 +117,7 @@ def toSpotify(tracks):
 
 def getSheetInfo(sheetID):
     """Shows basic usage of the Sheets API.
-    Prints values from a sample spreadsheet.
+    Prints values from a spreadsheet.
     """
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
