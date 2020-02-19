@@ -162,9 +162,9 @@ def getSheetInfo(sheetID):
 # uses regex to get spreadsheetId portion from links like above
 def getSheetID():
     sheetURL = raw_input("Enter the url of the google sheet: ")
-    i = re.search(r'/d/([a-zA-Z0-9-_]+)', sheetURL).group()
-    # gets '/d/spreadsheetId' as two seperate strings in an array
-    x = re.findall(r'\w+', i)
+    i = re.search(r'/d/([^/]+)', sheetURL).group()
+    # gets '/d/spreadsheetId' as two seperate strings in an array ['d', 'spreadsheetID']
+    x = re.findall(r'([^/]+)', i)
     sheetID = x[1]
     return sheetID
 
