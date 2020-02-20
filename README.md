@@ -7,7 +7,3 @@ Script to take song data from a Google Sheet and input it into a Spotify playlis
 - Python 2.7
 - Spotify account
 - Google sheet with song data
-
-## Other shit
-
-ay bruh idk this some doo doo shit
