@@ -14,15 +14,26 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installation
 
-do this to install/clone repo
+SheetToSpotify runs on Python 2.7. To check which version of python you have on your machine, go to your terminal on MacOSX, command line on Linux, or a bash terminal on Windows and type
+
+`python2 --version`
+
+You can install Python 2.7 from a bash/linux command line using
+
+`sudo apt-get install python2.7`
 
 ## Deployment
 
 commands and input, format of sheet
 
+## Built With
+
+- [Google Sheets](https://developers.google.com/sheets/api/guides/concepts) - Used for taking info from Google Sheets/Forms
+- [Spotipy](https://spotipy.readthedocs.io/en/2.9.0/) - lightweight Python library for the Spotify Web API.
+
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/rajsbhatia/SheetToSpotify/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/rajsbhatia/SheetToSpotify/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
 
 ## Authors
 
