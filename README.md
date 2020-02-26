@@ -22,9 +22,11 @@ You can install Python 2.7 from a bash/linux command line using
 
 `sudo apt-get install python2.7`
 
-## Deployment
+TODO: continue working on installation
 
-commands and input, format of sheet
+## Running Program
+
+TODO: commands and input, format of sheet
 
 ## Built With
 
@@ -41,4 +43,5 @@ Please read [CONTRIBUTING.md](https://github.com/rajsbhatia/SheetToSpotify/blob/
 
 ## Acknowledgements
 
-whoever's code used, inspiration, etc.
+- KDVS Davis 90.3 FM; long live freeform Radio!
+- Google Sheets API for examples
