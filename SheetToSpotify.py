@@ -154,6 +154,7 @@ def getSheetInfo(sheetID):
         print('Artist, Album, Song:')
         for row in values:
             # Print columns C, D, E, which correspond to indices 0, 1, 2
+            # gives Artist, Album, Song as data for Tracks object
             print('%s, %s, %s' % (row[0], row[1], row[2]))
             tracks.append(Track(row[0], row[1], row[2]))
     return tracks
