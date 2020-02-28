@@ -26,7 +26,9 @@ TODO: continue working on installation
 
 ## Running Program
 
-TODO: commands and input, format of sheet
+### Windows
+
+First you will need the Linux subsystem for Windows. To get this, follow the directions [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10). Ubuntu 16.04 LTS or 18.04 LTS are recommended.
 
 ## Built With
 
