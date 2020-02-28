@@ -18,7 +18,7 @@ SheetToSpotify runs on Python 2.7. To check which version of python you have on 
 
 `python2 --version`
 
-You can install Python 2.7 from a bash/linux command line using
+You can install Python 2.7 from a bash/linux command line, if python 2.7 is not installed already, using
 
 `sudo apt-get install python2.7`
 
